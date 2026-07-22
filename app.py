@@ -11,9 +11,19 @@
 import os
 import requests
 from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
+from pydantic import BaseModel, Field
+
+class ai_details(BaseModel): 
+    service_name : str = Field("Name of the Service")
+    cloud_provider: str = Field("Cloud Provider for the Service")
+    features: list[str] = Field("Features of the Service")
+
+class ai_details_output(BaseModel): 
+    service_details: list[ai_details]
+
 
 def call_model(): 
     #Initialize the model. 
@@ -26,8 +36,12 @@ def call_model():
     #Now the model needs a message. 
     #langchain is more disciplined - accepts SystemMessage, HumanMessage and AIMessage
     model_messages = [
-        HumanMessage("Hello....! How are you, Can you send the response as a push notification using the tool provided?")
+        SystemMessage("You are a Agentic AI Engineering expert who provides answers to the user queries on Agentic AI"), 
+        HumanMessage("Hello, Can you provide me few AWS Agentic AI developement tools like Bedrock and there usecases in AWS")
     ]
+
+    #Define the Structured output model
+    tool_llm = openai_model.with_structured_output(ai_details_output)
 
     #get the model with the tool and bind to the model. 
     #print(snd_notification.description, snd_notification.name, snd_notification.args)
@@ -43,17 +57,16 @@ def call_model():
             snd_notification.invoke({"message": tool_argument})
             #or snd_notification.invoke(call['args'])
 
-
-
 @tool
 #Let's define a tool. 
-def snd_notification(message: str): 
+def snd_notification(message: ai_details_output): 
     """ This tool is used to send a push notification """
-    print("Tool invoked")
+    for sr_detail in message.service_details: 
+        print(f"Service name: {sr_detail.service_name}, CloudProvider: {sr_detail.cloud_provider} & Features: {sr_detail.features} \n")
     status = requests.post("https://api.pushover.net/1/messages.json", data = {
         "token" : os.getenv("PUSHOVER_TOKEN"), 
         "user" : os.getenv("PUSHOVER_USER"),
-        "message" : message
+        "message" : message.service_details
     })
     if status == 200: 
         return "Message Sent Succesfully"

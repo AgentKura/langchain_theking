@@ -8,7 +8,7 @@ from langgraph.prebuilt import tool_node
 @tool
 def send_notification(message:str): 
     """ 
-    Description: This tool is used to send push notification.  
+    Description: This tool is used to send push notification with a message
 
     Args: 
         message : Sends the message as notification. 

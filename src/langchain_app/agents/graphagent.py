@@ -1,8 +1,15 @@
-from langchain.agents import create_agent
+# PEP-8 grouping standards - Stdlib, Third party, First party - Seperated by blank-lines
+from collections.abc import Sequence, Callable #Standard imports
+from typing import Any
+from dotenv import load_dotenv
+
+from langchain.agents import create_agent #Third Party
 from langgraph.graph.state import CompiledStateGraph 
 from langchain_core.messages import SystemMessage,HumanMessage, AIMessage
+from langchain_core.tools import BaseTool,tool
 from langchain_openai import ChatOpenAI
-from dotenv import load_dotenv
+
+from langchain_app.tools.cflogin_tool import btp_login #First Party
 
 #classes use pascal case
 class Base_Agent:
@@ -12,14 +19,16 @@ class Base_Agent:
         #snake case for variables and objects
         #Leading underscore '_' for variables which are used in local scope and not used anywhere else. 
         #Use TypeHints for strict type clarity. 
-        self._llm : CompiledStateGraph #create_agent method returns a Compiled State Graph.
-        self._sysprompt: str | SystemMessage | None = None 
-        self._aimessage : AIMessage
+        _llm : CompiledStateGraph #create_agent method returns a Compiled State Graph.
+        _sysprompt: str | SystemMessage | None = None 
+        _aimessage : AIMessage
+        _llm_tools : Sequence[BaseTool | Callable[..., Any] | dict[str, Any]] | None = None
 
     def initialize_llm(self, usr_model): 
         self._llm = create_agent(
             model= usr_model,
-            system_prompt = self._sysprompt
+            system_prompt = self._sysprompt,
+            tools = self._llm_tools
         )
     
     def set_sys_prompt(self,sys_promt): 
@@ -32,6 +41,10 @@ class Base_Agent:
         self._aimessage = _llm_response['messages'][0]
         print(self._aimessage.content)
 
+    def define_tools(self,tool:tool): 
+        self._llm_tools = [tool]
+
+
 
 if __name__ == "__main__": 
     #Execute actions here
@@ -42,7 +55,7 @@ if __name__ == "__main__":
     - You are experienced in building Agentic AI workflows.
     - Full Stack applications with Agentic AI Skills and tools. 
     - You're experienced to automate the user tasks on web based applications. 
-    - You're experienced in building agents capable of managing infrastructure for small set of virtual machies and services. 
+    - You're experienced in building agents capable of managing infrastructure for small set of virtual machines and services. 
 
     ## Tasks: 
     - You're currently, acting as a Advisor for Business teams to identify, Analyze and Optimize business process using Agentic AI solutions. 
@@ -52,8 +65,17 @@ if __name__ == "__main__":
     - You ask questions when you need more context from Business owners. 
     - You do not jump into conclusions without full context. 
     - You provide better solutions that require less support in the future. 
+
+    ## Duties Continued: 
+    - You also help users to perform actions based on their request. 
+    - You act as CLI for the users and authenticate users into their cloud platform. 
+    - Create/Update/Manage Services on Cloud Platform. 
     """
+    #Set System Prompt and Assign tools
     ba_object.set_sys_prompt(sys_promt=sys_prompt)
-    ba_object.initialize_llm(usr_model='gpt-4.1-mini')
-    usr_message = HumanMessage(content="Hi! How are you doing sir?")
+    ba_object.define_tools(tool=btp_login)
+
+    #Initialize LLM with tools, System Prompt and Model
+    ba_object.initialize_llm(usr_model='gpt-5-mini')
+    usr_message = HumanMessage(content="Hi! How are you doing sir? Can you log me into BTP Cloud Foundry")
     ba_object.get_response(usr_prompt=usr_message)

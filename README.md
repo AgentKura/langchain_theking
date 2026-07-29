@@ -26,11 +26,21 @@ uv run file_name.py
 ```
 
 ## Folders
-### src/langchain
+### src/langchain_app
     - This folder has code related to Langchain->create_agent method which creats an agent graph out of the box. 
     - More details on create_agent can be found at: https://reference.langchain.com/python/langchain/agents/factory/create_agent
     - Model can be from any provider supported on langchain. Models related to providers can be found at: https://docs.langchain.com/oss/python/integrations/chat?_gl=1*18jv9gm*_gcl_au*NjA4MzA3OTI4LjE3ODQ3MjY2ODE.*_ga*MTM5MTc3MTIyMy4xNzg0NzI2Njgx*_ga_47WX3HKKY2*czE3ODUxODUzNDckbzQkZzEkdDE3ODUxODUzNjgkajM5JGwwJGgw
 
-### Class Base_Agent: 
+### agents Folder:
+    - Contains python files for agents defined in the langchain_app project. 
+
+### tools: 
+    - Tools used in the langchain_app project. 
+    - cflogin_tool defines btp_login functionality-> More tools to be added later in the project. 
+
+### prompts: 
+    - Instead of creating a .txt file or any other file then import the file into python. I declared a python file and defined prompts as strings; less complexity I feel.  
+
+### BaseAgent.py
     - Acts as the wrapper around the LLM Calls and performs the actual LLM Calls. 
     - Abstraction layer; which is seperate from core logic can be written in seperate file. For now I've written the abstraction layer in the same file. 

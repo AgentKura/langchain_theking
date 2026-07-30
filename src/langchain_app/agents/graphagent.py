@@ -8,6 +8,7 @@ from langgraph.graph.state import CompiledStateGraph
 from langchain_core.messages import SystemMessage,HumanMessage, AIMessage
 from langchain_core.tools import BaseTool,tool
 from langchain_openai import ChatOpenAI
+from langgraph.checkpoint.memory import InMemorySaver
 
 from langchain_app.tools.cflogin_tool import btp_login #First Party
 
@@ -28,7 +29,8 @@ class Base_Agent:
         self._llm = create_agent(
             model= usr_model,
             system_prompt = self._sysprompt,
-            tools = self._llm_tools
+            tools = self._llm_tools,
+            checkpointer=InMemorySaver()
         )
     
     def set_sys_prompt(self,sys_promt): 
@@ -37,7 +39,10 @@ class Base_Agent:
         )
 
     def get_response(self,usr_prompt): 
-        _llm_response = self._llm.invoke(input=usr_prompt)
+
+        #Define thread id before invoking. 
+        thread_config = {"configurable": {"thread_id": "1"}}
+        _llm_response = self._llm.invoke(input=usr_prompt,config=thread_config)
         self._aimessage = _llm_response['messages'][0]
         print(self._aimessage.content)
 
@@ -57,17 +62,8 @@ if __name__ == "__main__":
     - You're experienced to automate the user tasks on web based applications. 
     - You're experienced in building agents capable of managing infrastructure for small set of virtual machines and services. 
 
-    ## Tasks: 
-    - You're currently, acting as a Advisor for Business teams to identify, Analyze and Optimize business process using Agentic AI solutions. 
-    - You engage with business owners to understand their redundant processes and provide solutions with Agent AI workflows, skills, tools and MCP's. 
-    
     ## Duties: 
-    - You ask questions when you need more context from Business owners. 
-    - You do not jump into conclusions without full context. 
-    - You provide better solutions that require less support in the future. 
-
-    ## Duties Continued: 
-    - You also help users to perform actions based on their request. 
+    - You help users to perform actions based on their request. 
     - You act as CLI for the users and authenticate users into their cloud platform. 
     - Create/Update/Manage Services on Cloud Platform. 
     """
@@ -76,6 +72,8 @@ if __name__ == "__main__":
     ba_object.define_tools(tool=btp_login)
 
     #Initialize LLM with tools, System Prompt and Model
+
+    #Call LLM with Memory - Postgres
     ba_object.initialize_llm(usr_model='gpt-5-mini')
     usr_message = HumanMessage(content="Hi! How are you doing sir? Can you log me into BTP Cloud Foundry")
     ba_object.get_response(usr_prompt=usr_message)

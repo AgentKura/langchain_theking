@@ -1,4 +1,5 @@
-##  langchain_theking : I've tried many SDK's for Agentic AI development. I feel langchain remains the king of all the sdk's I've tried. 
+#  Langchain_TheKing - Multiple Projects using Langchain - Orchestration
+## I've tried many SDK's for Agentic AI development. I feel langchain remains the king of all the sdk's I've tried. 
 
 ## Tech Statck Used: 
     - So far, I've developed the initial agent orchestrations through individual python files. 
@@ -31,16 +32,38 @@ uv run file_name.py
     - More details on create_agent can be found at: https://reference.langchain.com/python/langchain/agents/factory/create_agent
     - Model can be from any provider supported on langchain. Models related to providers can be found at: https://docs.langchain.com/oss/python/integrations/chat?_gl=1*18jv9gm*_gcl_au*NjA4MzA3OTI4LjE3ODQ3MjY2ODE.*_ga*MTM5MTc3MTIyMy4xNzg0NzI2Njgx*_ga_47WX3HKKY2*czE3ODUxODUzNDckbzQkZzEkdDE3ODUxODUzNjgkajM5JGwwJGgw
 
-### agents Folder:
-    - Contains python files for agents defined in the langchain_app project. 
+### src/imnot_jarvis
+    - This folder contains code for DigitalTwin App, which can act as your assistant to provide details about your profile. 
+    - The agent is build to strictly avoid hallucination.
+    - You can independently work on this application. For more details, look into the readme.md file inside the app. 
 
-### tools: 
-    - Tools used in the langchain_app project. 
-    - cflogin_tool defines btp_login functionality-> More tools to be added later in the project. 
+### src/langgraph_app
+    - Graph Orchestration from basics. 
+    - This app does not have a UI, you're free to add Gradio/ChainLit/StreamLit as your UI. 
+    - This app covers back application which utilizes tools and provide structured outputs. 
 
-### prompts: 
-    - Instead of creating a .txt file or any other file then import the file into python. I declared a python file and defined prompts as strings; less complexity I feel.  
+## Repository Structure
+```
+src/
+├── imnot_jarvis/           # Digital twin agent
+│   ├── agents/             # Worker — wraps create_agent, tools, checkpointer
+│   ├── jarvis_ui/          # Chainlit entry point
+│   ├── prompts/            # System prompt templates
+│   ├── reference/          # Resume / background source material
+│   ├── tools/              # Custom tools
+│   └── README.md
+├── langchain_app/          # LangChain learning module
+│   ├── agents/
+│   ├── app_ui/
+│   ├── prompts/
+│   ├── tools/
+│   ├── __init__.py
+│   └── README.md
+├── langchain_core_app/
+│   └── app.py
+└── langgraph_app/
+    ├── app_graph.ipynb
+    ├── orch_lang_graph.py
+    └── tool.py
+```
 
-### BaseAgent.py
-    - Acts as the wrapper around the LLM Calls and performs the actual LLM Calls. 
-    - Abstraction layer; which is seperate from core logic can be written in seperate file. For now I've written the abstraction layer in the same file. 

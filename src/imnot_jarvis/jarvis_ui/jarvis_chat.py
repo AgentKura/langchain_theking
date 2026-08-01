@@ -30,9 +30,9 @@ async def start_chat():
     wo_agent.set_system_prompt(
         system_prompt=llm_system_prompt.substitute(candidate_details = resume_details)
     )
-    session_agent: CompiledStateGraph | None = wo_agent.initialize_agent(usr_model="gpt-5-mini")
+    wo_agent.initialize_agent(usr_model="gpt-5-mini")
 
-    cl.user_session.set("agent", session_agent)
+    cl.user_session.set("agent_class", wo_agent)
 
 
 @cl.on_message
@@ -41,7 +41,7 @@ async def on_usr_message(usr_message:cl.Message):
     msg = cl.Message(content="")
     #Get agent reference here and pass the message
     
-    wo_agent : CompiledStateGraph | None = cl.user_session.get("agent")
+    wo_agent : Worker = cl.user_session.get("agent_class")
 
     #maintain a callback to the Agent in the config
     config = RunnableConfig(
@@ -50,7 +50,7 @@ async def on_usr_message(usr_message:cl.Message):
     )
 
     #Output will be of dicts
-    async for chunk in wo_agent.astream(
+    async for chunk in wo_agent._llm.astream(
         input = {"messages": [HumanMessage(content=usr_message.content)]},
         config = config,
         stream_mode = "messages"

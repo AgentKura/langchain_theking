@@ -15,7 +15,7 @@ class Worker:
         self._sys_prompt : str | SystemMessage | None = None 
         self._llm : CompiledStateGraph | None = None
         
-    def initialize_agent(self,usr_model)-> CompiledStateGraph: 
+    def initialize_agent(self,usr_model)-> None: 
         #Let User interface layer select the model. 
         self._llm = create_agent(
             model = usr_model,
@@ -23,7 +23,6 @@ class Worker:
             checkpointer=InMemorySaver()
         )
         #Agent is ready. 
-        return self._llm
 
     def set_system_prompt(self,system_prompt:str): 
         self._sys_prompt = SystemMessage(

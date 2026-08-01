@@ -28,18 +28,16 @@ async def on_usr_message(usr_message:cl.Message):
     #maintain a callback to the Agent in the config
     config = RunnableConfig(
         configurable={"thread_id": cl.context.session.id},
-        callbacks= [cl.LangchainCallbackHandler]
+        callbacks= [cl.LangchainCallbackHandler()]
     )
-    async for chunk in wo_agent.astream(
-        input = {"messages": [HumanMessage(usr_message.content)]},
-        config = config,
-        stream_mode = "messages"
-    ): 
-        ai_message = chunk[0]
-        await msg.stream_token(ai_message.content)
-    await msg.send()
 
-    
+    #Output will be of dicts
+    agent_response = await wo_agent.ainvoke(
+        input = {"messages": [HumanMessage(content=usr_message.content)]},
+        config = config
+    )
+    final_response = agent_response["messages"][-1]
+    await cl.Message(content=final_response.text).send()
 
 
 

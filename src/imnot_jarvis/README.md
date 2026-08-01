@@ -1,7 +1,15 @@
 # Project: 
 
 ## Description: 
-    - Hola Amigo....! You got pranked. I'm infact Jarvis. Your personal Sidekick researcher. 
+    - Hola Amigo....! You got pranked. I'm infact Jarvis. Personal Digital twin for my boss Mr. Bharadwaj Kura 😎. 
+    - Very Handsome, smart and charming; My boss is paying me for praising him. 😁 
+    - Here is the good news, you can use me as your digital twin as well. 
+
+## Steps to make me work for you: 
+    - Pull the code. And it's absolutely free, my boss don't charge you for using his code. 
+    - Place your resume in the reference folder with name "resume.pdf"
+    - Provide me few basic details of yours in the prompts folder in file "jarvis_task.py"
+    - And boom..! That's it, I'm gonna work for you as your Digital Twin and market your profile. 
 
 # Project Structure: 
 

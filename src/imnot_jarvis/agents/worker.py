@@ -10,6 +10,7 @@ class Worker:
 
     #Constructor
     def __init__(self) -> None:
+
         load_dotenv(override=True)
         self._sys_prompt : str | SystemMessage | None = None 
         self._llm : CompiledStateGraph | None = None
@@ -24,7 +25,8 @@ class Worker:
         #Agent is ready. 
         return self._llm
 
-    def set_system_prompt(self,system_prompt): 
-        self._sys_prompt = system_prompt
-
+    def set_system_prompt(self,system_prompt:str): 
+        self._sys_prompt = SystemMessage(
+            content=system_prompt
+        )
 

@@ -1,20 +1,35 @@
 # There are many AI Chat libraries out there. However, for me chailit UI seems to be smoother.  
 import asyncio
+from PyPDF2 import PdfReader
 
 import chainlit as cl
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import GraphOutput
-
-from imnot_jarvis.agents.worker import Worker
 from langchain.messages import HumanMessage
 from langgraph.pregel.main import RunnableConfig
+
+from imnot_jarvis.agents.worker import Worker
+from imnot_jarvis.prompts.jarvis_task import jarvis_system_prompt
+
 
 
 @cl.on_chat_start
 async def start_chat():
     #Initialize the worker agent class
     #For now do not set any system prompt, send the model. 
+    resume_details: str = ""
+
     wo_agent = Worker()
+    llm_system_prompt = jarvis_system_prompt
+
+    #Extract Resume details from PDF. 
+    pdf_extract = PdfReader(stream="4_langchain/src/imnot_jarvis/reference/resume.pdf")
+    for page in pdf_extract.pages:
+        resume_details += page.extract_text()
+
+    wo_agent.set_system_prompt(
+        system_prompt=llm_system_prompt.substitute(candidate_details = resume_details)
+    )
     session_agent: CompiledStateGraph | None = wo_agent.initialize_agent(usr_model="gpt-5-mini")
 
     cl.user_session.set("agent", session_agent)
@@ -35,12 +50,13 @@ async def on_usr_message(usr_message:cl.Message):
     )
 
     #Output will be of dicts
-    agent_response = await wo_agent.ainvoke(
+    async for chunk in wo_agent.astream(
         input = {"messages": [HumanMessage(content=usr_message.content)]},
-        config = config
-    )
-    final_response = agent_response["messages"][-1]
-    await cl.Message(content=final_response.text).send()
+        config = config,
+        stream_mode = "messages"
+    ):
+        await msg.stream_token(token = chunk[0].content)
+    await msg.send()
 
 
 

@@ -2,19 +2,23 @@
 import asyncio
 
 import chainlit as cl
+from langgraph.graph.state import CompiledStateGraph
+from langgraph.types import GraphOutput
 
 from imnot_jarvis.agents.worker import Worker
 from langchain.messages import HumanMessage
 from langgraph.pregel.main import RunnableConfig
+
 
 @cl.on_chat_start
 async def start_chat():
     #Initialize the worker agent class
     #For now do not set any system prompt, send the model. 
     wo_agent = Worker()
-    session_agent = wo_agent.initialize_agent(usr_model="gpt-5-mini")
+    session_agent: CompiledStateGraph | None = wo_agent.initialize_agent(usr_model="gpt-5-mini")
 
     cl.user_session.set("agent", session_agent)
+
 
 @cl.on_message
 async def on_usr_message(usr_message:cl.Message): 
@@ -22,7 +26,7 @@ async def on_usr_message(usr_message:cl.Message):
     msg = cl.Message(content="")
     #Get agent reference here and pass the message
     
-    wo_agent = cl.user_session.get("agent")
+    wo_agent : CompiledStateGraph | None = cl.user_session.get("agent")
 
     #maintain a callback to the Agent in the config
     config = RunnableConfig(

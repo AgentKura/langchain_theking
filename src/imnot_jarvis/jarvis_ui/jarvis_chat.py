@@ -20,8 +20,7 @@ async def start_chat():
 async def on_usr_message(usr_message:cl.Message): 
     #this is what user inputed on the Screen. 
     msg = cl.Message(content="")
-    #how shall I pass this message to the Agent. 
-    #Get agent reference here. 
+    #Get agent reference here and pass the message
     
     wo_agent = cl.user_session.get("agent")
 

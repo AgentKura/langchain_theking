@@ -1,7 +1,9 @@
 # PEP-8 Standards: Standard inputs, Thirdparties & First parties - Seperated by Blank space. 
 from dotenv import load_dotenv
+
 from langchain.agents import create_agent
 from langgraph.graph.state import CompiledStateGraph
+from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import SystemMessage
 
 class Worker: 
@@ -16,7 +18,8 @@ class Worker:
         #Let User interface layer select the model. 
         self._llm = create_agent(
             model = usr_model,
-            system_prompt= self._sys_prompt
+            system_prompt= self._sys_prompt,
+            checkpointer=InMemorySaver()
         )
         #Agent is ready. 
         return self._llm

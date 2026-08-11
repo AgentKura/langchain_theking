@@ -18,7 +18,7 @@ without hallucinating credentials you don't have.
 ## Make it yours in 4 steps
 
 1. Pull the code
-2. Drop your resume as `resume.pdf` in the `reference/` folder
+2. Drop your resume as `resume.pdf` in the `src/reference/` folder
 3. Fill in your basics in `prompts/jarvis_task.py`
 4. Run it — that's it
 

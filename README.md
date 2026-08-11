@@ -1,63 +1,124 @@
-#  Langchain_TheKing - Multiple Projects using Langchain - Orchestration
-## I've tried many SDK's for Agentic AI development. I feel langchain remains the king of all the sdk's I've tried. 
+# langchain_theking
 
-## Tech Statck Used: 
-    - So far, I've developed the initial agent orchestrations through individual python files. 
-    - Plan is to include UI, React or any libraries that support chatbot's in the future. 
+A collection of agentic AI projects built with LangChain, LangGraph, and Chainlit.
 
-## Prerequisites: 
-    - Install Python, I recommend version >=3.12
-    - Install UV - Package manager for Python from Astral Docs: https://docs.astral.sh/uv/getting-started/installation/
-    - Below are the usefull UV commands to kickstart the project
+## Projects
+
+### `src/imnot_jarvis` — Digital Twin Agent
+A conversational AI assistant that answers questions about a candidate's professional profile. Reads a PDF resume at startup and uses it as the sole source of truth — no hallucination, no fabrication.
+
+- **Stack:** LangChain · Chainlit · OpenAI · pypdf
+- **Architecture:** `Worker` class wraps the agent graph. System prompt is injected once at session start with the extracted resume text. UI streams responses token by token.
+- **Detailed docs:** `src/imnot_jarvis/README.md`
+
+### `src/langchain_app` — LangChain Agent with Tools
+An agent built using LangChain's `create_agent` factory. Covers tool binding, prompt engineering, and structured outputs.
+
+- **Stack:** LangChain · Chainlit
+- **Reference:** [LangChain create_agent docs](https://reference.langchain.com/python/langchain/agents/factory/create_agent)
+
+### `src/langgraph_app` — LangGraph Orchestration
+Graph-based orchestration from scratch using LangGraph. Covers state machines, tool nodes, conditional edges, and structured Pydantic outputs. No UI — add Chainlit, Gradio, or Streamlit as needed.
+
+- **Stack:** LangGraph · Pydantic
+
+### `src/langchain_core_app` — LangChain Core
+Minimal LangChain Core usage without the higher-level abstractions.
+
+---
+
+## Prerequisites
+
+- Python `>=3.12` — [python.org](https://www.python.org/downloads/)
+- uv — [installation guide](https://docs.astral.sh/uv/getting-started/installation/)
+- OpenAI API key
+
+---
+
+## Setup
+
 ```bash
+# 1. Clone the repo
+git clone https://github.com/AgentKura/langchain_theking.git
+cd langchain_theking
 
-# Explicity sync the environment. 
-# All the dependacies are already mentioned in the pyproject.toml 
+# 2. Install dependencies
 uv sync
 
+# 3. Create a .env file in the repo root
+echo "OPENAI_API_KEY=your-key-here" > .env
+```
 
-# Run a python file - by providing the complete path 
+---
+
+## Running the projects
+
+**imnot_jarvis (Digital Twin)**
+```bash
+# Drop your resume PDF at:
+# src/imnot_jarvis/reference/resume.pdf
+
 uv run chainlit run src/imnot_jarvis/jarvis_ui/jarvis_chat.py
 ```
+Opens at `http://localhost:8000`
 
-## Folders
-### src/langchain_app
-    - This folder has code related to Langchain->create_agent method which creats an agent graph out of the box. 
-    - More details on create_agent can be found at: https://reference.langchain.com/python/langchain/agents/factory/create_agent
-    - Model can be from any provider supported on langchain. Models related to providers can be found at: https://docs.langchain.com/oss/python/integrations/chat?_gl=1*18jv9gm*_gcl_au*NjA4MzA3OTI4LjE3ODQ3MjY2ODE.*_ga*MTM5MTc3MTIyMy4xNzg0NzI2Njgx*_ga_47WX3HKKY2*czE3ODUxODUzNDckbzQkZzEkdDE3ODUxODUzNjgkajM5JGwwJGgw
-
-### src/imnot_jarvis
-    - This folder contains code for DigitalTwin App, which can act as your assistant to provide details about your profile. 
-    - The agent is build to strictly avoid hallucination.
-    - You can independently work on this application. For more details, look into the readme.md file inside the app. 
-
-### src/langgraph_app
-    - Graph Orchestration from basics. 
-    - This app does not have a UI, you're free to add Gradio/ChainLit/StreamLit as your UI. 
-    - This app covers back application which utilizes tools and provide structured outputs. 
-
-## Repository Structure
-```
-src/
-├── imnot_jarvis/           # Digital twin agent
-│   ├── agents/             # Worker — wraps create_agent, tools, checkpointer
-│   ├── jarvis_ui/          # Chainlit entry point
-│   ├── prompts/            # System prompt templates
-│   ├── reference/          # Resume / background source material
-│   ├── tools/              # Custom tools
-│   └── README.md
-├── langchain_app/          # LangChain learning module
-│   ├── agents/
-│   ├── app_ui/
-│   ├── prompts/
-│   ├── tools/
-│   ├── __init__.py
-│   └── README.md
-├── langchain_core_app/
-│   └── app.py
-└── langgraph_app/
-    ├── app_graph.ipynb
-    ├── orch_lang_graph.py
-    └── tool.py
+**langgraph_app**
+```bash
+uv run src/langgraph_app/orch_lang_graph.py
 ```
 
+**langchain_core_app**
+```bash
+uv run src/langchain_core_app/app.py
+```
+
+---
+
+## Repository structure
+
+```
+langchain_theking/
+├── src/
+│   ├── imnot_jarvis/
+│   │   ├── agents/             # Worker class — agent graph, tools, checkpointer
+│   │   ├── jarvis_ui/          # Chainlit entry point
+│   │   ├── prompts/            # System prompt templates
+│   │   ├── reference/          # Resume PDF (not committed — add your own)
+│   │   ├── tools/              # Custom tools
+│   │   └── README.md
+│   ├── langchain_app/
+│   │   ├── agents/
+│   │   ├── app_ui/
+│   │   ├── prompts/
+│   │   ├── tools/
+│   │   └── README.md
+│   ├── langchain_core_app/
+│   │   └── app.py
+│   └── langgraph_app/
+│       ├── app_graph.ipynb
+│       ├── orch_lang_graph.py
+│       └── tool.py
+├── .env                        # Not committed — create from the setup step above
+├── .gitignore
+├── pyproject.toml
+├── uv.lock
+└── README.md
+```
+
+---
+
+## Tech stack
+
+| Layer | Library |
+|---|---|
+| Agent orchestration | LangChain, LangGraph |
+| LLM provider | OpenAI (GPT) |
+| UI | Chainlit |
+| PDF parsing | pypdf |
+| Package management | uv |
+
+---
+
+## What this is not
+
+Each project here is a self-contained learning artifact — not a production service. No authentication, no persistent storage, no CI. The `imnot_jarvis` agent reads a single PDF and operates entirely in-session memory.

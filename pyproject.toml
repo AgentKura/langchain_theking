@@ -1,0 +1,13 @@
+[project]
+name = "langchain-theking"
+version = "0.1.0"
+description = "Dependancy file for the projects inside this repository"
+readme = "README.md"
+dependencies = [
+    "chainlit>=2.11.1",
+    "langchain>=1.3.14",
+    "langchain-openai>=1.3.4",
+    "langgraph>=1.2.9",
+    "pypdf>=6.15.0",
+    "python-dotenv>=1.2.2",
+]

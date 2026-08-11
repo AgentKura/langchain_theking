@@ -125,4 +125,4 @@ langchain_theking/
 
 ## UV Registry
 
-- If you're running the project from your work laptop, make sure to provide those details in pyproject.toml files. My company do not allow access to pypi.org, allow prechecked modules are allowed through jfrog. 
+- If you're using a work laptop for the project, please add those details to the pyproject.toml files. At my company, access to pypi.org isn't allowed, and only pre-checked libraries through jfrog are permitted.

@@ -10,20 +10,14 @@
     - Install UV - Package manager for Python from Astral Docs: https://docs.astral.sh/uv/getting-started/installation/
     - Below are the usefull UV commands to kickstart the project
 ```bash
-# initialize pyproject.toml file
-uv init
-
-# Add Dependancies to the project. 
-uv add langchain-core
-uv add langgraph
-uv add langchain-openiai
-uv add langchain
 
 # Explicity sync the environment. 
+# All the dependacies are already mentioned in the pyproject.toml 
 uv sync
 
-# Run a python file. 
-uv run file_name.py
+
+# Run a python file - by providing the complete path 
+uv run chainlit run src/imnot_jarvis/jarvis_ui/jarvis_chat.py
 ```
 
 ## Folders

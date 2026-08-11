@@ -1,6 +1,7 @@
 # There are many AI Chat libraries out there. However, for me chailit UI seems to be smoother.  
 import asyncio
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
+from pathlib import Path
 
 import chainlit as cl
 from langgraph.graph.state import CompiledStateGraph
@@ -18,12 +19,13 @@ async def start_chat():
     #Initialize the worker agent class
     #For now do not set any system prompt, send the model. 
     resume_details: str = ""
+    pdf_path = Path(__file__).parent.parent.parent/"reference"/"resume.pdf"
 
     wo_agent = Worker()
     llm_system_prompt = jarvis_system_prompt
 
     #Extract Resume details from PDF. 
-    pdf_extract = PdfReader(stream="4_langchain/src/imnot_jarvis/reference/resume.pdf")
+    pdf_extract = PdfReader(str(pdf_path))
     for page in pdf_extract.pages:
         resume_details += page.extract_text()
 

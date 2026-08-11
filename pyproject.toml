@@ -22,6 +22,6 @@ build-backend = "hatchling.build"
 packages = ["src/imnot_jarvis"]
 
 [[tool.uv.index]]
-name = "lilly-jfrog"
-url = "https://elilillyco.jfrog.io/artifactory/api/pypi/pypi/simple/"
+name = "<Provide Desired name>"
+url = "https://<your-company>.jfrog.io/artifactory/api/pypi/pypi/simple/"
 default = true

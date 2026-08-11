@@ -121,4 +121,8 @@ langchain_theking/
 
 ## What this is not
 
-Each project here is a self-contained learning artifact — not a production service. No authentication, no persistent storage, no CI. The `imnot_jarvis` agent reads a single PDF and operates entirely in-session memory.
+- Each project here is a self-contained learning artifact — not a production service. No authentication, no persistent storage, no CI. The `imnot_jarvis` agent reads a single PDF and operates entirely in-session memory.
+
+## UV Registry
+
+- If you're running the project from your work laptop, make sure to provide those details in pyproject.toml files. My company do not allow access to pypi.org, allow prechecked modules are allowed through jfrog. 
